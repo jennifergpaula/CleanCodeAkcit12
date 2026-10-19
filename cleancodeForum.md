@@ -65,3 +65,38 @@ python -m unittest discover -s tests -v
 ```
 
 Resultado registrado: 8 testes aprovados. Alterações exclusivamente documentais não mudam o comportamento testado; ainda assim, a suíte deve ser executada quando essas alterações forem entregues junto com mudanças de código.
+
+## Reflexão sobre as orientações e sugestões
+
+### Orientações que tornaram a solução mais compreensível
+
+As orientações mais úteis foram as que transformaram ideias gerais em critérios observáveis:
+
+- **Nomes ligados ao domínio:** `valor_bruto`, `categoria_cliente`, `total_produtos` e `FRETE_BASE` ajudam a entender o cálculo sem precisar decifrar abreviações.
+- **Etapas e ordem explícitas:** separar subtotal, desconto de cupom e frete deixa visível a sequência comercial e facilita comparar o código com o contrato.
+- **Validação antecipada e erros específicos:** guard clauses para limites e valores não finitos tornam claro o que a função aceita e por que uma entrada é recusada.
+- **Comentários com propósito:** a orientação de comentar decisões não óbvias, em vez de narrar cada linha, mantém a explicação junto ao código sem duplicar o que ele já comunica.
+- **Testes por comportamento:** nomes como `test_rejeita_valor_bruto_nao_finito` mostram a regra protegida. Os testes permitem avaliar se a solução está correta, em vez de usar quantidade de linhas ou funções como medida de qualidade.
+
+Essas orientações ajudam porque comunicam intenção, regras e limites. Não exigem simplesmente encurtar o código nem dividir uma função que já representa uma operação coesa.
+
+### Sugestões aceitas, adaptadas e rejeitadas
+
+- **Aceitas:** validar `NaN` e infinitos para valor bruto e peso, pois sem essa checagem o cálculo pode retornar `nan` ou `inf` em vez de um total utilizável. A validação veio acompanhada de mensagens explícitas e testes para os três valores não finitos.
+- **Aceita:** adicionar regras ao `.gitignore` para caches Python, evitando que arquivos gerados sejam confundidos com código-fonte.
+- **Adaptadas:** orientações genéricas como “use funções pequenas” e “escreva código limpo” foram convertidas em critérios verificáveis para este domínio: nomes de variáveis, limites de responsabilidades, ordem das regras, mensagens de erro, estilo de comentários e cenários de teste. Não se criou uma função auxiliar apenas para reduzir linhas.
+- **Rejeitada por ora:** trocar `float` por `Decimal`. `Decimal` pode ser apropriado para dinheiro em sistemas de produção, mas mudaria os tipos e o contrato da função; essa mudança precisa de um requisito explícito de precisão e de compatibilidade, além de testes e decisão sobre arredondamento. No escopo atual, a alteração não era necessária para resolver o problema identificado.
+
+### Aplicação na empresa
+
+Eu incorporaria à geração e revisão de código o critério de **rastreabilidade entre regra, tratamento de erro e teste**. Para cada regra ou validação alterada, a proposta deve indicar o comportamento esperado, a resposta para entradas inválidas e o teste que protege esse comportamento. O revisor confirma essa correspondência, não a quantidade de linhas, funções ou comentários.
+
+Para colocar isso em prática, a equipe precisaria ajustar a rotina de trabalho:
+
+1. Ao abrir uma tarefa, registrar critérios de aceite observáveis e exemplos de entradas válidas, limites e inválidas.
+2. Incluir esses critérios no contexto usado para gerar código e pedir que a ferramenta proponha ou atualize os testes correspondentes.
+3. Na revisão, usar uma lista curta: contrato atendido, erros explícitos, testes cobrindo os cenários e documentação atualizada quando necessário.
+4. Executar a suíte relevante na integração contínua e tratar falhas como bloqueio até serem explicadas ou corrigidas.
+5. Discutir abstrações pela clareza e pela necessidade do domínio, não por metas de reduzir linhas ou aumentar a quantidade de funções.
+
+Esse processo adiciona uma verificação focada ao fluxo existente, sem transformar Clean Code em uma lista de métricas superficiais.
