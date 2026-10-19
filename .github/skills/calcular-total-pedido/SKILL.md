@@ -22,11 +22,12 @@ description: "Use ao implementar, revisar ou testar o cálculo do total de pedid
 
 ## Convenções e critérios de Clean Code
 
-- Mantenha a lógica de produção em `src/` e os testes em `tests/`. Use a biblioteca padrão `unittest` e preserve o comando de descoberta documentado no README.
-- Use português nos nomes do domínio e siga `snake_case` para funções, parâmetros e variáveis (`calcular_total_pedido`, `valor_bruto`). Use `UPPER_SNAKE_CASE` para constantes (`FRETE_BASE`). Escolha nomes que expliquem o papel ou significado do valor; evite abreviações vagas e nomes genéricos como `x`, `dados` ou `resultado` quando houver um nome mais específico.
-- Dê a cada função uma responsabilidade clara. A função pública coordena validação e cálculo; extraia uma regra para uma função auxiliar apenas quando isso tornar a lógica mais clara ou reutilizável, sem fragmentar operações triviais.
-- Mantenha a validação no início da função com guard clauses. Para valor bruto e peso não finitos ou fora dos limites, e categoria inválida, lance `ValueError` com as mensagens definidas no README. Não capture essas exceções para ocultar o erro nem substitua entradas inválidas por valores padrão.
-- Ignore cupons desconhecidos ou repetidos como regra de negócio explícita; não trate esse caso como exceção. Não introduza capturas amplas (`except Exception`) nem falhas silenciosas para outros erros inesperados.
-- Escreva docstrings curtas que descrevam o propósito da função e comentários somente quando explicarem uma decisão ou regra não óbvia. Não use comentários para repetir o que o código já expressa.
-- Mantenha o fluxo e as regras de negócio fáceis de seguir, sem duplicar cálculos ou adicionar abstrações que não sejam necessárias. Preserve o arredondamento final para duas casas decimais.
-- Nomeie testes como `test_<comportamento>` e cubra resultados esperados, cupons, limites (incluindo `NaN` e infinito) e mensagens de erro relevantes. Ao alterar uma regra, atualize os testes e o README para manter implementação, especificação e documentação consistentes.
+- **Nomes significativos:** use nomes do domínio em português, `snake_case` para funções, parâmetros e variáveis e `UPPER_SNAKE_CASE` para constantes. Prefira intenção explícita (`total_produtos`) a abreviações vagas ou nomes genéricos.
+- **Responsabilidade única e coesão:** mantenha cada função responsável por uma operação coesa. A função pública coordena validação e cálculo; extraia auxiliares somente para nomear uma regra, reduzir complexidade ou reutilizar lógica, não para fragmentar operações triviais.
+- **Simplicidade (KISS) e evitar excesso (YAGNI):** prefira fluxo direto e regras evidentes. Não adicione classes, dependências, camadas ou configurações sem requisito concreto.
+- **Guard clauses / fail fast:** valide no início. Rejeite valores bruto e peso não finitos ou fora dos limites, e categoria inválida, com `ValueError` e as mensagens documentadas no README.
+- **Erros explícitos:** não capture exceções para ocultar falhas, não substitua entradas inválidas por valores padrão e não use `except Exception`. Cupons desconhecidos ou repetidos são exceções apenas à regra comercial: ignore-os conforme especificado, sem interromper o cálculo.
+- **DRY com parcimônia:** mantenha valores de negócio nomeados em constantes e evite duplicar fórmulas, mas não crie abstrações sem reutilização ou benefício claro.
+- **Comentários intencionais:** escreva docstrings curtas que expliquem o propósito. Use comentários apenas para esclarecer uma decisão ou regra não óbvia; não narre código que já é legível.
+- **Testes por comportamento:** mantenha produção em `src/`, testes em `tests/` e use `unittest`. Nomeie testes `test_<comportamento>` e cubra resultados, cupons, limites (inclusive `NaN` e infinitos) e mensagens de erro. Use `subTest` para entradas variadas que validem a mesma regra.
+- **Consistência e verificação:** ao mudar uma regra, atualize implementação, testes, README, este guia e o prompt relacionados. Execute `python -m unittest discover -s tests -v` e informe o resultado real; não declare testes aprovados sem executá-los.

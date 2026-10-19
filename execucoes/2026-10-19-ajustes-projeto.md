@@ -9,6 +9,7 @@
 - Criado `.gitignore` para excluir `__pycache__/` e arquivos Python compilados.
 - Atualizados o README, a skill e o prompt para documentar e preservar as validações.
 - Atualizada a árvore de arquivos do README para incluir `execucoes/`, `.gitignore` e `cleancodeForum.md`.
+- Documentados os princípios de Clean Code efetivamente observáveis (nomes significativos, coesão, simplicidade, guard clauses, regras nomeadas, erros explícitos, testes por comportamento e documentação alinhada) e as convenções a seguir em futuras alterações.
 
 ## Verificação
 

@@ -16,12 +16,13 @@ Regras de negócio:
 
 Convenções de implementação:
 - Mantenha código de produção em `src/` e testes em `tests/`; use `unittest` e preserve `python -m unittest discover -s tests -v`.
-- Use nomes do domínio em português, com `snake_case` para funções, parâmetros e variáveis e `UPPER_SNAKE_CASE` para constantes. Prefira nomes que revelem significado e intenção, sem abreviações vagas.
-- Dê a cada função uma responsabilidade clara. A função pública coordena o cálculo; extraia auxiliares somente quando reduzirem complexidade ou possibilitarem reutilização, sem fragmentar operações triviais.
-- Valide primeiro com guard clauses. Para valor bruto, peso e categoria inválidos, lance `ValueError` com as mensagens exatas definidas no contrato; não oculte erros com capturas ou valores padrão.
+- Use nomes do domínio em português, com `snake_case` para funções, parâmetros e variáveis e `UPPER_SNAKE_CASE` para constantes. Prefira nomes que expressem intenção, como `total_produtos`, e evite abreviações vagas.
+- Mantenha cada função coesa e com responsabilidade clara. A função pública coordena validação e cálculo; extraia auxiliares somente para nomear uma regra, reduzir complexidade ou reutilizar lógica, sem fragmentar operações triviais (SRP).
+- Prefira fluxo simples, direto e suficiente para o requisito (KISS/YAGNI); não introduza classes, dependências ou camadas sem benefício concreto.
+- Valide primeiro com guard clauses. Para valor bruto, peso e categoria inválidos, lance `ValueError` com as mensagens exatas do README; não oculte exceções nem use valores padrão para entradas inválidas (fail fast).
 - Rejeite `NaN` e infinitos para valor bruto e peso, usando `math.isfinite` e as mensagens documentadas no README.
-- Ignore cupons inválidos ou duplicados conforme a regra de negócio, sem transformar esse caso em erro. Não use `except Exception` nem silencie erros inesperados.
+- Ignore cupons inválidos ou duplicados conforme a regra de negócio, sem transformar esse caso em erro. Não use `except Exception`, não masque erros e evite padrões e fórmulas duplicados (DRY com parcimônia).
 - Use docstrings curtas para explicar o propósito das funções. Comente apenas decisões ou regras não óbvias; não repita em comentários o que os nomes e o código já deixam claro.
-- Evite duplicação e abstrações desnecessárias, preserve o arredondamento final e mantenha README, implementação e testes coerentes.
+- Preserve o arredondamento final e mantenha README, implementação, testes, skill e prompt coerentes. Consulte [cleancodeForum.md](../../cleancodeForum.md) para exemplos dos princípios aplicados.
 
-Atualize ou adicione testes nomeados por comportamento para validar resultados, limites (inclusive `NaN` e infinitos) e erros relevantes. Execute `python -m unittest discover -s tests -v` e informe claramente qualquer falha.
+Atualize ou adicione testes `unittest` nomeados por comportamento para validar resultados, limites (inclusive `NaN` e infinitos) e erros relevantes; use `subTest` para validar entradas diferentes sob a mesma regra. Execute `python -m unittest discover -s tests -v` e informe claramente o resultado, sem declarar sucesso se não executou a suíte.
